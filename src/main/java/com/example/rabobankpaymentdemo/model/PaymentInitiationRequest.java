@@ -15,6 +15,7 @@ public class PaymentInitiationRequest {
 
   private String endToEndId = null;
 
+/*
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -28,6 +29,7 @@ public class PaymentInitiationRequest {
     sb.append("}");
     return sb.toString();
   }
+*/
 
   /**
    * Convert the given object to string with each line indented by 4 spaces
