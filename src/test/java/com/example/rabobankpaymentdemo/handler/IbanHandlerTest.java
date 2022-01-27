@@ -9,13 +9,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class IbanHandlerTest {
 
     @Test
-    void verifyValid() {
+    void testVerifyValidIBAN() {
         IbanHandler ibanHandler = new IbanHandler(TestData.getValidPaymentInitiationRequest());
         assertTrue(ibanHandler.verify());
     }
 
     @Test
-    void verifyInvalid() {
+    void testVerifyInvalidIBAN() {
         IbanHandler ibanHandler = new IbanHandler(TestData.getInvalidPaymentInitiationRequest());
         assertFalse(ibanHandler.verify());
     }

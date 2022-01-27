@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,7 +24,13 @@ class SignatureHandlerTest {
     }
 
     @Test
-    void verifyValidCertificate() {
+    void testVerifyValidSignature() {
         assertTrue(signatureHandler.verify());
+    }
+
+    @Test
+    void testVerifyInvalidSignature() {
+        signatureHandler.setSignature("Invalid");
+        assertFalse(signatureHandler.verify());
     }
 }

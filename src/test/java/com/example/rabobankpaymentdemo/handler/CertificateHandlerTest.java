@@ -25,20 +25,20 @@ class CertificateHandlerTest {
     }
 
     @Test
-    void validVerify(){
+    void testValidCertificate(){
         Optional<X509Certificate> certificate = TestData.getValidX509Certificate();
         certificateHandler.setX509Certificate(certificate);
         assertTrue(certificateHandler.verify());
     }
 
     @Test
-    void invalidVerify(){
+    void testInvalidCertificate(){
         certificateHandler.setCertificateString("Invalid");
         assertFalse(certificateHandler.verify());
     }
 
     @Test
-    void digestTest(){
+    void testDigest(){
         String expectedSha256Hex = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
         String actualSha256Hex = certificateHandler.digest("test");
         assertEquals(expectedSha256Hex, actualSha256Hex);

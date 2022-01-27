@@ -28,7 +28,7 @@ class PaymentIInitControllerIT {
     }
 
     @Test
-    void initiatePayment_201() throws Exception {
+    void testInitiatePaymentForResponse201() throws Exception {
         mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -47,7 +47,7 @@ class PaymentIInitControllerIT {
     }
 
     @Test
-    void initiatePaymentNotAccepted_400() throws Exception {
+    void testInitiatePaymentWithInvalidDataResponse400() throws Exception {
        mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -59,7 +59,7 @@ class PaymentIInitControllerIT {
     }
 
     @Test
-    void initiatePaymentInvalid_422() throws Exception {
+    void testInitiatePaymentLimitExceedResponse422() throws Exception {
         mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
