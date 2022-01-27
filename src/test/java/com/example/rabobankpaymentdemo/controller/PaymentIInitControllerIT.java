@@ -28,7 +28,7 @@ class PaymentIInitControllerIT {
     }
 
     @Test
-    void initiatePaymentValid() throws Exception {
+    void initiatePayment_402() throws Exception {
         mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -43,11 +43,11 @@ class PaymentIInitControllerIT {
                                 "\"endToEndId\": \"endToEndId\"\n" +
                                 "\n" +
                                 "}"))
-                .andExpect(status().isUnprocessableEntity());
+                        .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    void initiatePaymentInvalid() throws Exception {
+    void initiatePaymentNotAccepted_400() throws Exception {
        mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -55,8 +55,19 @@ class PaymentIInitControllerIT {
                         .header("Signature-Certificate", TestData.CERTIFICATE)
                         .header("Signature", TestData.RABO_SIGNATURE)
                         .content("{\"debtorIBAN\":\"NL02RABO7134384551\",\"creditorIBAN\":\"NL94ABNA1008270121\",\"amount\":\"1.00\"}"))
-                        .andExpect(status().isNotAcceptable());
+                        .andExpect(status().isBadRequest());
+    }
 
+    @Test
+    void initiatePaymentInvalid_500() throws Exception {
+        mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Request-Id", "29318e25-cebd-498c-888a-f77672f66449")
+                        .header("Signature-Certificate", TestData.INVALID_CERTIFICATE)
+                        .header("Signature", TestData.RABO_SIGNATURE)
+                        .content("{\"debtorIBAN\":\"NL02RABO7134384551\",\"creditorIBAN\":\"NL94ABNA1008270121\",\"amount\":\"1.00\"}"))
+                        .andExpect(status().isNotAcceptable());
     }
 
 }

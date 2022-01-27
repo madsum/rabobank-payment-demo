@@ -10,6 +10,8 @@ import java.io.ByteArrayInputStream;
 import java.security.PublicKey;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -27,7 +29,7 @@ public abstract class TppRequestHandler {
 
     protected String generatedSignature;
 
-    protected X509Certificate x509Certificate;
+    protected Optional<X509Certificate> x509Certificate = Optional.empty();
 
     protected String certificateString;
 
@@ -68,10 +70,8 @@ public abstract class TppRequestHandler {
     protected PublicKey getPublicKeyFromCertificate(String certificateString)  {
         PublicKey publicKey = null;
         try {
-            X509Certificate x509Certificate = getX509CertificateFromCertificate(certificateString);
-            if(x509Certificate != null){
-                publicKey = x509Certificate.getPublicKey();
-            }
+            Optional<X509Certificate> x509Certificate = getX509CertificateFromCertificate(certificateString);
+            publicKey = Objects.requireNonNull(x509Certificate.stream().findFirst().orElse(null)).getPublicKey();
         }catch (Exception e){
             log.error("Exception for signature: {}",
                     e.getMessage());
@@ -79,19 +79,13 @@ public abstract class TppRequestHandler {
         return publicKey;
     }
 
-    protected X509Certificate getX509CertificateFromCertificate(String certificateString) {
-        if( x509Certificate == null){
+    protected Optional<X509Certificate> getX509CertificateFromCertificate(String certificateString) {
+        if( x509Certificate.isEmpty()){
             ByteArrayInputStream byteArrayInputStream = null;
             try {
                 CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
                 byteArrayInputStream = new ByteArrayInputStream(certificateString.getBytes("UTF8"));
-/*                if(certificateString.isEmpty()){
-                    byteArrayInputStream = new ByteArrayInputStream(CERTIFICATE.getBytes("UTF8"));
-                }else{
-                    byteArrayInputStream = new ByteArrayInputStream(certificateString.getBytes("UTF8"));
-                }*/
-                x509Certificate = (X509Certificate) certificateFactory.generateCertificate(byteArrayInputStream);
-                log.info("Public key from cert: "+ x509Certificate.getPublicKey().toString());
+                x509Certificate = Optional.ofNullable((X509Certificate) certificateFactory.generateCertificate(byteArrayInputStream));
             }catch (Exception e){
                 log.error("Exception for signature: {}",
                         e.getMessage());

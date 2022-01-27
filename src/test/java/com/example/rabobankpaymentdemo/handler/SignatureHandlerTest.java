@@ -23,8 +23,7 @@ class SignatureHandlerTest {
     }
 
     @Test
-    void verifyValidCertificate() throws Exception {
-        signatureHandler.setInputSignature(TestData.CERTIFICATE);
+    void verifyValidCertificate() {
         assertTrue(signatureHandler.verify());
     }
 

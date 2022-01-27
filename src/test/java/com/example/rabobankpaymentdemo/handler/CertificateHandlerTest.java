@@ -1,6 +1,7 @@
 package com.example.rabobankpaymentdemo.handler;
 
 import com.example.rabobankpaymentdemo.TestData;
+import com.example.rabobankpaymentdemo.exception.InvalidCertificateException;
 import com.example.rabobankpaymentdemo.exception.InvalidSignatureException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import sun.security.x509.X509CertImpl;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,16 +25,16 @@ class CertificateHandlerTest {
     }
 
     @Test
-    void validVerify()  {
+    void validVerify() throws InvalidCertificateException {
         var certificate = TestData.getValidX509Certificate();
         certificateHandler.setX509Certificate(certificate);
         assertTrue(certificateHandler.verify());
     }
 
     @Test
-    void invalidVerify() {
+    void invalidVerify() throws InvalidCertificateException {
         var certificate = new X509CertImpl();
-        certificateHandler.setX509Certificate(certificate);
+        certificateHandler.setX509Certificate(Optional.of(certificate));
         assertFalse(certificateHandler.verify());
     }
 

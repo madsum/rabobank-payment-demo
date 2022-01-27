@@ -1,5 +1,6 @@
 package com.example.rabobankpaymentdemo.controller;
 
+import com.example.rabobankpaymentdemo.exception.InvalidCertificateException;
 import com.example.rabobankpaymentdemo.handler.CertificateHandler;
 import com.example.rabobankpaymentdemo.handler.IbanHandler;
 import com.example.rabobankpaymentdemo.handler.ResponseHandler;
@@ -35,24 +36,27 @@ public class PaymentIInitController {
     public ResponseEntity<PaymentAcceptedResponse> initiatePayment(@RequestHeader(value="X-Request-Id", required=true) UUID xRequestId,
                                                                    @RequestHeader(value="Signature-Certificate", required=true) String signatureCertificate,
                                                                    @RequestHeader(value="Signature", required=true) String signature,
-                                                                   @RequestBody PaymentInitiationRequest body) throws Exception {
+                                                                   @RequestBody PaymentInitiationRequest body) throws InvalidCertificateException {
         ErrorReasonCode errorReasonCode = ErrorReasonCode.GENERAL_ERROR;
         CertificateHandler certificateHandler  = new CertificateHandler(xRequestId, signatureCertificate, body, signature);
         if(!certificateHandler.verify()){
             errorReasonCode = ErrorReasonCode.UNKNOWN_CERTIFICATE;
             log.error("Error: {}",errorReasonCode.name());
+            return ResponseHandler.buildResponse(errorReasonCode);
         }
 
         SignatureHandler signatureHandler = new SignatureHandler(xRequestId, signatureCertificate, body, signature);
         if(!signatureHandler.verify()){
             errorReasonCode = INVALID_SIGNATURE;
             log.error("Error: {}",errorReasonCode.name());
+            return ResponseHandler.buildResponse(errorReasonCode);
         }
 
         IbanHandler ibanHandler = new IbanHandler(body);
         if(!ibanHandler.verify()){
             errorReasonCode = LIMIT_EXCEEDED;
             log.error("Error: {}",errorReasonCode.name());
+            return ResponseHandler.buildResponse(errorReasonCode);
         }
         return ResponseHandler.buildResponse(errorReasonCode);
     }
