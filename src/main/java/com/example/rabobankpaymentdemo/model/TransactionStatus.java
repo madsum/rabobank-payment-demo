@@ -13,5 +13,4 @@ public enum TransactionStatus {
     public String toString() {
         return String.valueOf(value);
     }
-
 }

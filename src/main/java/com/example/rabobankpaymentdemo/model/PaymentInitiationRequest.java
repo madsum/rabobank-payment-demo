@@ -14,5 +14,4 @@ public class PaymentInitiationRequest {
   private String currency = "EUR";
 
   private String endToEndId = null;
-
 }

@@ -1,8 +1,5 @@
 package com.example.rabobankpaymentdemo.model;
 
-/**
- * Gets or Sets ErrorReasonCode
- */
 public enum ErrorReasonCode {
   UNKNOWN_CERTIFICATE("UNKNOWN_CERTIFICATE"),
   INVALID_SIGNATURE("INVALID_SIGNATURE"),

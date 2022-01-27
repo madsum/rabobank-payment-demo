@@ -28,17 +28,13 @@ public class SignatureHandler extends TppRequestHandler {
             String sha256Encoded = digest(paymentInitiationRequestBody.toString());
             sha256Encoded = xRequestId.toString().concat(sha256Encoded);
             Signature publicSignature = Signature.getInstance("SHA256withRSA");
-
             publicSignature.initVerify(publicKey);
             publicSignature.update(sha256Encoded.getBytes(StandardCharsets.UTF_8));
-
             byte[] signatureBytes = Base64.getDecoder().decode(signature);
             isVerified = publicSignature.verify(signatureBytes);
         }catch (Exception e){
-            log.error("Exception for signature: {}",
-                    e.getMessage());
+            log.error("Exception for signature: {}", e.getMessage());
         }
         return isVerified;
     }
-
 }

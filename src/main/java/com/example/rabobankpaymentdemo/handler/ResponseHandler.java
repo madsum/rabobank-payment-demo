@@ -55,5 +55,4 @@ public class ResponseHandler {
         }
         return response;
     }
-
 }

@@ -9,5 +9,4 @@ public class RaboBankPaymentDemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RaboBankPaymentDemoApplication.class, args);
 	}
-
 }

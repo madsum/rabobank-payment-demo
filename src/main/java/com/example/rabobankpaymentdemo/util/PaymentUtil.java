@@ -57,10 +57,8 @@ public class PaymentUtil {
                 keyFactory = KeyFactory.getInstance("RSA");
                 privateKey = keyFactory.generatePrivate(keySpecPrivate);
             } catch (Exception e) {
-                log.error("Exception for createPrivateKey: {}",
-                        e.getMessage());
+                log.error("Exception for createPrivateKey: {}", e.getMessage());
             }
-
         }
         return privateKey;
     }
@@ -74,10 +72,8 @@ public class PaymentUtil {
             privateSignature.update(plainText.getBytes(StandardCharsets.UTF_8));
             signature = privateSignature.sign();
         } catch (Exception e){
-            log.error("Exception for signature: {}",
-                    e.getMessage());
+            log.error("Exception for signature: {}", e.getMessage());
         }
         return  Base64.getEncoder().encodeToString(signature);
     }
-
 }

@@ -26,5 +26,4 @@ class SignatureHandlerTest {
     void verifyValidCertificate() {
         assertTrue(signatureHandler.verify());
     }
-
 }

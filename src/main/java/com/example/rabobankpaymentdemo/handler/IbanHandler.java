@@ -43,8 +43,8 @@ public class IbanHandler extends TppRequestHandler {
         double amount = Double.parseDouble(paymentInitiationRequestBody.getAmount());
         if(  amount > 0 &&  sumOfValidIbanAccountDigit(paymentInitiationRequestBody.getDebtorIBAN()) %
                 paymentInitiationRequestBody.getDebtorIBAN().length() == 0 ){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 }

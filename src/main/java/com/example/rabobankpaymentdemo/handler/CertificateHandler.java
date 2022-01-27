@@ -1,17 +1,20 @@
 package com.example.rabobankpaymentdemo.handler;
 
-import com.example.rabobankpaymentdemo.exception.InvalidCertificateException;
 import com.example.rabobankpaymentdemo.model.PaymentInitiationRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import sun.security.x509.X500Name;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 
-import javax.security.auth.x500.X500Principal;
-import java.io.IOException;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
-import java.util.Objects;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class CertificateHandler extends TppRequestHandler {
@@ -20,33 +23,29 @@ public class CertificateHandler extends TppRequestHandler {
         super(xRequestId, certificateString, signature, paymentInitiationRequestBody);
     }
 
-    public boolean verify() throws InvalidCertificateException {
+    public boolean verify()  {
         Optional<X509Certificate> x509Certificate = getX509CertificateFromCertificate(certificateString);
+        AtomicBoolean cnFound = new AtomicBoolean(false);
         if(x509Certificate.isEmpty()){
             return false;
         }
-        X500Principal principal  = Objects.requireNonNull(x509Certificate.stream()
-                                    .findFirst()
-                                    .orElse(null))
-                                    .getSubjectX500Principal();
-        if (principal != null) {
-            try {
-                X500Name x500name = new X500Name(principal.getName());
-                String commonName = x500name.getCommonName();
+        try {
+            X500Name x500name = new JcaX509CertificateHolder(x509Certificate.get()).getSubject();
+            RDN[] cn = x500name.getRDNs(BCStyle.CN);
+            Arrays.stream(cn).forEach(item -> {
+                String commonName  = IETFUtils.valueToString(item.getFirst().getValue());
                 if (commonName.contains("Sandbox-TPP")) {
-                    return true;
+                    cnFound.set(true);
                 }
-            } catch (IOException e) {
-                log.error("Exception for certificate: {}",
-                        e.getMessage());
-                throw new InvalidCertificateException("Invalid certificate");
+            });
+            } catch (CertificateEncodingException e) {
+                log.error("Exception for certificate: {}", e.getMessage());
+                cnFound.set(false);
             }
-        }
-        return false;
+        return cnFound.get();
     }
 
     public String digest(String originalString) {
         return DigestUtils.sha256Hex(originalString);
     }
-
 }

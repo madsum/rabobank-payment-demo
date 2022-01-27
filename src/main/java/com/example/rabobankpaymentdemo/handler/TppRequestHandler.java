@@ -73,8 +73,7 @@ public abstract class TppRequestHandler {
             Optional<X509Certificate> x509Certificate = getX509CertificateFromCertificate(certificateString);
             publicKey = Objects.requireNonNull(x509Certificate.stream().findFirst().orElse(null)).getPublicKey();
         }catch (Exception e){
-            log.error("Exception for signature: {}",
-                    e.getMessage());
+            log.error("Exception for signature: {}", e.getMessage());
         }
         return publicKey;
     }
@@ -87,8 +86,7 @@ public abstract class TppRequestHandler {
                 byteArrayInputStream = new ByteArrayInputStream(certificateString.getBytes("UTF8"));
                 x509Certificate = Optional.ofNullable((X509Certificate) certificateFactory.generateCertificate(byteArrayInputStream));
             }catch (Exception e){
-                log.error("Exception for signature: {}",
-                        e.getMessage());
+                log.error("Exception for signature: {}", e.getMessage());
             }
         }
         return x509Certificate;
@@ -99,5 +97,5 @@ public abstract class TppRequestHandler {
         return sha256hex;
     }
 
-    public abstract boolean verify() throws Exception;
+    public abstract boolean verify();
 }

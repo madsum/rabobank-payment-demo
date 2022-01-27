@@ -28,7 +28,7 @@ class PaymentIInitControllerIT {
     }
 
     @Test
-    void initiatePayment_402() throws Exception {
+    void initiatePayment_201() throws Exception {
         mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -43,7 +43,7 @@ class PaymentIInitControllerIT {
                                 "\"endToEndId\": \"endToEndId\"\n" +
                                 "\n" +
                                 "}"))
-                        .andExpect(status().isUnprocessableEntity());
+                        .andExpect(status().isCreated());
     }
 
     @Test
@@ -59,7 +59,7 @@ class PaymentIInitControllerIT {
     }
 
     @Test
-    void initiatePaymentInvalid_201() throws Exception {
+    void initiatePaymentInvalid_422() throws Exception {
         mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -74,7 +74,6 @@ class PaymentIInitControllerIT {
                                 "\"endToEndId\": \"endToEndId\"\n" +
                                 "\n" +
                                 "}"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isUnprocessableEntity());
     }
-
 }

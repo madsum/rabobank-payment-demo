@@ -68,5 +68,4 @@ public class PaymentIInitController {
         String signature = PaymentUtil.generateSignature(sha256Encoded);
         return signature;
     }
-
 }
