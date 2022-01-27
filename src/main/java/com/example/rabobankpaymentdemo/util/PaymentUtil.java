@@ -82,7 +82,6 @@ public class PaymentUtil {
         } catch (Exception e){
             log.error("Exception for signature: {}",
                     e.getMessage());
-
         }
         return  Base64.getEncoder().encodeToString(signature);
     }
