@@ -49,11 +49,11 @@ public class PaymentIInitController {
             log.error("Error: {}",errorReasonCode.name());
         }
 
-        IbanHandler ibanHandler = new IbanHandler(body);
+/*        IbanHandler ibanHandler = new IbanHandler(body);
         if(!ibanHandler.verify()){
             errorReasonCode = LIMIT_EXCEEDED;
             log.error("Error: {}",errorReasonCode.name());
-        }
+        }*/
         return ResponseHandler.buildResponse(errorReasonCode);
     }
 

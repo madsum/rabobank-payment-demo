@@ -14,11 +14,11 @@ import java.util.UUID;
 public class CertificateHandler extends TppRequestHandler {
 
     public CertificateHandler(UUID xRequestId, String certificateString, PaymentInitiationRequest paymentInitiationRequestBody, String signature) {
-        super(xRequestId, certificateString, paymentInitiationRequestBody, signature);
+        super(xRequestId, certificateString, signature, paymentInitiationRequestBody);
     }
 
     public boolean verify()  {
-        X509Certificate x509Certificate = getX509Certificate();
+        X509Certificate x509Certificate = getX509CertificateFromCertificate(certificateString);
         if(x509Certificate == null){
             return false;
         }

@@ -12,7 +12,7 @@ import static com.example.rabobankpaymentdemo.model.ErrorReasonCode.VALID_IBAN;
 public class IbanHandler extends TppRequestHandler {
 
     public IbanHandler(PaymentInitiationRequest paymentInitiationRequestBody) {
-        super(null, null, paymentInitiationRequestBody, null);
+        super(null, null,  null, paymentInitiationRequestBody);
     }
 
     private int sumOfValidIbanAccountDigit(String iban){

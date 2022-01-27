@@ -68,14 +68,9 @@ public class TestData {
             "4zxyHcER\n" +
             "-----END CERTIFICATE-----";
 
-    public static final String INVALID_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n" +
-            "MIIDwjCCAqoCCQDxVbCjIKynQjANBgkqhkiG9w0BAQsFADCBojELMAkGA1UEBhMC\n" +
-            "TkwxEDAOBgNVBAgMB1V0cmVjaHQxEDAOBgNVBAcMB1V0cmVjaHQxETAPBgNVBAoM\n";
+    public static final String SIGNATURE = "WHjIGjM9ONl40W5VPfwu63f47cGFE36ZLfl16tdkDndRF7JYauMDRj5yusfuW7aiExkk+bU3lttDLlb4lYhuX0D6Y0M3cofm0Rmz7o7pQJw4t5uyvkHtnLLATmnv+iZIRVw7XcSgQZ9nmjzpCqo8qn4bm4v6MdxuGwOzz97ipU/NRav6qAF9o1bQzsYysnsEVkDWNfQmCfNTESrY62nitVR6zeGeKtOwuaIVAgHFNDEYaIi77UNnAIZ7ZbKBCGfaFW80vKb+oJzjCjFDUWp2saUmhahxBIBZSMMzVdp6N5+2uAM4boVeYMIqqEAVuPlwOKrt8bXuxRSrAUTdrYuVSg==";
 
-    public static final String INVLID_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n" +
-            "MIIDwjCCAqoCCQDxVbCjIKynQjANBgkqhkiG9w0BAQsFADCBojELMAkGA1UEBhMC\n" +
-            "TkwxEDAOBgNVBAgMB1V0cmVjaHQxEDAOBgNVBAcMB1V0cmVjaHQxETAPBgNVBAoM\n";
-
+    public static final String RABO_SIGNATURE = "AlFr/WbYiekHmbB6XdEO/7ghKd0n6q/bapENAYsL86KoYHqa4eP34xfH9icpQRmTpH0qOkt1vfUPWnaqu+vHBWx/gJXiuVlhayxLZD2w41q8ITkoj4oRLn2U1q8cLbjUtjzFWX9TgiQw1iY0ezpFqyDLPU7+ZzO01JI+yspn2gtto0XUm5KuxUPK24+xHD6R1UZSCSJKXY1QsKQfJ+gjzEjrtGvmASx1SUrpmyzVmf4qLwFB1ViRZmDZFtHIuuUVBBb835dCs2W+d7a+icGOCtGQbFcHvW0FODibnY5qq8v5w/P9i9PSarDaGgYb+1pMSnF3p8FsHAjk3Wccg2a1GQ==";
 
     public static X509Certificate getValidX509Certificate(){
         X509Certificate certificate = null;
@@ -85,19 +80,6 @@ public class TestData {
             certificate = (X509Certificate) fact.generateCertificate(is);
         }catch (Exception ignore){
         }
-        return certificate;
-    }
-
-    public static X509Certificate getInvalidX509Certificate(){
-        X509Certificate certificate = null;
-        try {
-            CertificateFactory fact = CertificateFactory.getInstance("X.509");
-            ByteArrayInputStream is = new ByteArrayInputStream(INVALID_CERTIFICATE.getBytes("UTF8"));
-            certificate = (X509Certificate) fact.generateCertificate(is);
-        }catch (Exception ignore){
-            System.out.println("ss");
-        }
-        System.out.println();
         return certificate;
     }
 

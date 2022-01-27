@@ -1,7 +1,6 @@
 package com.example.rabobankpaymentdemo.handler;
 
 import com.example.rabobankpaymentdemo.model.PaymentInitiationRequest;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,22 +16,18 @@ import java.util.UUID;
 @Slf4j
 public class SignatureHandler extends TppRequestHandler {
 
-    private String inputCertificate = "";
+    private String inputSignature = "";
 
     public SignatureHandler(UUID xRequestId, String certificateString, PaymentInitiationRequest paymentInitiationRequestBody, String signature) {
-        super(xRequestId, certificateString, paymentInitiationRequestBody, signature);
-        this.inputCertificate = signature;
+        super(xRequestId, certificateString, signature, paymentInitiationRequestBody);
+        this.inputSignature = signature;
     }
 
     public boolean verify(){
         boolean isVerified = false;
         PublicKey publicKey;
         try {
-            if(inputCertificate.isEmpty()) {
-                publicKey  = getPublicKeyFromCertificate(CERTIFICATE);
-            }else{
-                publicKey = getPublicKeyFromCertificate(inputCertificate);
-            }
+            publicKey = getPublicKeyFromCertificate(certificateString);
             String sha256Encoded = digest(paymentInitiationRequestBody.toString());
             sha256Encoded = xRequestId.toString().concat(sha256Encoded);
             Signature publicSignature = Signature.getInstance("SHA256withRSA");

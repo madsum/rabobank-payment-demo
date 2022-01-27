@@ -51,8 +51,8 @@ public class ResponseHandler {
                 break;
             default:
                 responseHeaders.set("HttpHeaders.ACCEPT", HttpHeaders.ACCEPT);
-                paymentAcceptedResponse.setStatus(REJECTED);
-                response = ResponseEntity.badRequest()
+                paymentAcceptedResponse.setStatus(ACCEPTED);
+                response = ResponseEntity.status(HttpStatus.CREATED)
                         .headers(responseHeaders)
                         .body(paymentAcceptedResponse);
         }
