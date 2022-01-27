@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import sun.security.x509.X509CertImpl;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
 
@@ -26,14 +27,14 @@ class CertificateHandlerTest {
 
     @Test
     void validVerify() throws InvalidCertificateException {
-        var certificate = TestData.getValidX509Certificate();
+        Optional<X509Certificate> certificate = TestData.getValidX509Certificate();
         certificateHandler.setX509Certificate(certificate);
         assertTrue(certificateHandler.verify());
     }
 
     @Test
     void invalidVerify() throws InvalidCertificateException {
-        var certificate = new X509CertImpl();
+        X509Certificate certificate = new X509CertImpl();
         certificateHandler.setX509Certificate(Optional.of(certificate));
         assertFalse(certificateHandler.verify());
     }

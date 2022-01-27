@@ -59,15 +59,22 @@ class PaymentIInitControllerIT {
     }
 
     @Test
-    void initiatePaymentInvalid_500() throws Exception {
+    void initiatePaymentInvalid_201() throws Exception {
         mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Request-Id", "29318e25-cebd-498c-888a-f77672f66449")
-                        .header("Signature-Certificate", TestData.INVALID_CERTIFICATE)
-                        .header("Signature", TestData.RABO_SIGNATURE)
-                        .content("{\"debtorIBAN\":\"NL02RABO7134384551\",\"creditorIBAN\":\"NL94ABNA1008270121\",\"amount\":\"1.00\"}"))
-                        .andExpect(status().isNotAcceptable());
+                        .header("X-Request-Id", "29318e25-cebd-498c-888a-f77672f66500")
+                        .header("Signature-Certificate", TestData.CERTIFICATE)
+                        .header("Signature", TestData.SIGNATURE_201)
+                        .content("{\n" +
+                                "\"debtorIBAN\": \"NL02RABO7134384113\",\n" +
+                                "\"creditorIBAN\": \"NL94ABNA1008270121\",\n" +
+                                "\"amount\": \"500\",\n" +
+                                "\"currency\": \"EUR\",\n" +
+                                "\"endToEndId\": \"endToEndId\"\n" +
+                                "\n" +
+                                "}"))
+                .andExpect(status().isCreated());
     }
 
 }
