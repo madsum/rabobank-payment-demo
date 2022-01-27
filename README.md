@@ -16,6 +16,6 @@ All code is unit tested as well as integration tested.
 
 ### Additionally, the application was dockerized.  
 
-In order to test, launch the service docker-compose up command. Prerequisite testing: docker, docker-compose shall be installed on the host.
+In order to test, launch the service only  `docker-compose up` command. Prerequisite testing: docker, docker-compose shall be installed on the host.
 
 
