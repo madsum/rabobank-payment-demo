@@ -1,8 +1,7 @@
-package com.example.rabobankpaymentdemo.service;
+package com.example.rabobankpaymentdemo.handler;
 
 import com.example.rabobankpaymentdemo.TestData;
 import com.example.rabobankpaymentdemo.exception.InvalidSignatureException;
-import com.example.rabobankpaymentdemo.handler.SignatureHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
