@@ -47,7 +47,7 @@ curl --location --request POST 'localhost:8080/v1.0.0/initiate-payment' \
 "endToEndId": "endToEndId"
 }'
 `
-2. POST  `localhost:8080/v1.0.0/get-signature` Extra implementation in order to get successful response 201 created.
+2. POST  `localhost:8080/v1.0.0/get-signature`
 
 - @Parameter(in = ParameterIn.HEADER, description = "" ,required=true) @RequestHeader(value="X-Request-Id", required=true) UUID xRequestId
 - @Parameter(in = ParameterIn.DEFAULT, description = "The payment initiation request body", required=true) @Valid @RequestBody PaymentInitiationRequest body
