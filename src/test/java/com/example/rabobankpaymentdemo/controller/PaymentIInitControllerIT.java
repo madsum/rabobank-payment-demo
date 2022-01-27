@@ -43,7 +43,7 @@ class PaymentIInitControllerIT {
                                 "\"endToEndId\": \"endToEndId\"\n" +
                                 "\n" +
                                 "}"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
