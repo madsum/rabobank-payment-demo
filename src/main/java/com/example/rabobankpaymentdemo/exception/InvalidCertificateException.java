@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InvalidCertificateException extends Exception {
 
-    public InvalidCertificateException(String errorMessage, Throwable err){
-        super(errorMessage, err);
-    }
+    public InvalidCertificateException(String errorMessage){
+        super(errorMessage);    }
 }
