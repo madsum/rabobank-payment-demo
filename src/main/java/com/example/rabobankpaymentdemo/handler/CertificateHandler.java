@@ -33,8 +33,7 @@ public class CertificateHandler extends TppRequestHandler {
             X500Name x500name = new JcaX509CertificateHolder(x509Certificate.get()).getSubject();
             RDN[] cn = x500name.getRDNs(BCStyle.CN);
             Arrays.stream(cn).forEach(item -> {
-                String commonName  = IETFUtils.valueToString(item.getFirst().getValue());
-                if (commonName.contains("Sandbox-TPP")) {
+                if (IETFUtils.valueToString(item.getFirst().getValue()).contains("Sandbox-TPP")) {
                     cnFound.set(true);
                 }
             });
