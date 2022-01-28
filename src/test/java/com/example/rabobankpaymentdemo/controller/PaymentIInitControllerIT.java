@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -74,6 +75,26 @@ class PaymentIInitControllerIT {
                                 "\"endToEndId\": \"endToEndId\"\n" +
                                 "\n" +
                                 "}"))
-                .andExpect(status().isUnprocessableEntity());
+                        .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void testGetSignature() throws Exception {
+       var result = mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.GET_SIGNATURE)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .header("X-Request-Id", "29318e25-cebd-498c-888a-f77672f66500")
+                            .content("{\n" +
+                                    "\"debtorIBAN\": \"NL02RABO7134384113\",\n" +
+                                    "\"creditorIBAN\": \"NL94ABNA1008270121\",\n" +
+                                    "\"amount\": \"500\",\n" +
+                                    "\"currency\": \"EUR\",\n" +
+                                    "\"endToEndId\": \"endToEndId\"\n" +
+                                    "\n" +
+                                    "}"))
+                            .andExpect(status().isOk())
+                            .andReturn();
+
+       assertNotNull(result.getResponse().getContentAsString());
     }
 }
