@@ -19,13 +19,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public class CertificateHandler extends TppRequestHandler {
 
+    private final String SANDBOX_TPP = "Sandbox-TPP";
+
     public CertificateHandler(UUID xRequestId, String certificateString, PaymentInitiationRequest paymentInitiationRequestBody, String signature) {
         super(xRequestId, certificateString, signature, paymentInitiationRequestBody);
     }
 
     public boolean verify()  {
         Optional<X509Certificate> x509Certificate = getX509CertificateFromCertificate(certificateString);
-        AtomicBoolean cnFound = new AtomicBoolean(false);
+        AtomicBoolean cnFoundCn = new AtomicBoolean(false);
         if(x509Certificate.isEmpty()){
             return false;
         }
@@ -33,15 +35,15 @@ public class CertificateHandler extends TppRequestHandler {
             X500Name x500name = new JcaX509CertificateHolder(x509Certificate.get()).getSubject();
             RDN[] cn = x500name.getRDNs(BCStyle.CN);
             Arrays.stream(cn).forEach(item -> {
-                if (IETFUtils.valueToString(item.getFirst().getValue()).contains("Sandbox-TPP")) {
-                    cnFound.set(true);
+                if (IETFUtils.valueToString(item.getFirst().getValue()).contains(SANDBOX_TPP)) {
+                    cnFoundCn.set(true);
                 }
             });
             } catch (CertificateEncodingException e) {
                 log.error("Exception for certificate: {}", e.getMessage());
-                cnFound.set(false);
+                cnFoundCn.set(false);
             }
-        return cnFound.get();
+        return cnFoundCn.get();
     }
 
     public String digest(String originalString) {
