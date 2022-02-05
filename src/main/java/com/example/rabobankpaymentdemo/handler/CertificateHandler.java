@@ -1,6 +1,7 @@
 package com.example.rabobankpaymentdemo.handler;
 
 import com.example.rabobankpaymentdemo.model.PaymentInitiationRequest;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.bouncycastle.asn1.x500.RDN;
@@ -8,6 +9,7 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import org.springframework.stereotype.Service;
 
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
@@ -17,6 +19,8 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
+@Service
+@NoArgsConstructor
 public class CertificateHandler extends TppRequestHandler {
 
     private final String SANDBOX_TPP = "Sandbox-TPP";

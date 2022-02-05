@@ -2,6 +2,7 @@ package com.example.rabobankpaymentdemo.handler;
 
 import com.example.rabobankpaymentdemo.model.PaymentInitiationRequest;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Slf4j
 @Getter
 @Setter
+@NoArgsConstructor
 public abstract class TppRequestHandler {
 
     protected UUID xRequestId;

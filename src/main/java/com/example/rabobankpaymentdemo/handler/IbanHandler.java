@@ -2,13 +2,17 @@ package com.example.rabobankpaymentdemo.handler;
 
 import com.example.rabobankpaymentdemo.model.ErrorReasonCode;
 import com.example.rabobankpaymentdemo.model.PaymentInitiationRequest;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.iban4j.IbanUtil;
+import org.springframework.stereotype.Service;
 
 import static com.example.rabobankpaymentdemo.model.ErrorReasonCode.INVALID_REQUEST;
 import static com.example.rabobankpaymentdemo.model.ErrorReasonCode.VALID_IBAN;
 
 @Slf4j
+@Service
+@NoArgsConstructor
 public class IbanHandler extends TppRequestHandler {
 
     public IbanHandler(PaymentInitiationRequest paymentInitiationRequestBody) {

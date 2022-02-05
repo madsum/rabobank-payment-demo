@@ -2,8 +2,10 @@ package com.example.rabobankpaymentdemo.handler;
 
 import com.example.rabobankpaymentdemo.model.PaymentInitiationRequest;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
@@ -14,6 +16,8 @@ import java.util.UUID;
 @Setter
 @Getter
 @Slf4j
+@Service
+@NoArgsConstructor
 public class SignatureHandler extends TppRequestHandler {
 
     public SignatureHandler(UUID xRequestId, String certificateString, PaymentInitiationRequest paymentInitiationRequestBody, String signature) {

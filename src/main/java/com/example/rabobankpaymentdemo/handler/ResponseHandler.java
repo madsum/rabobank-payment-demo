@@ -31,7 +31,7 @@ public class ResponseHandler {
                 break;
 
             case INVALID_SIGNATURE:
-               responseHeaders.set("UNKNOWN_CERTIFICATE", ErrorReasonCode.INVALID_SIGNATURE.name());
+               responseHeaders.set("INVALID_SIGNATURE", ErrorReasonCode.INVALID_SIGNATURE.name());
                 paymentAcceptedResponse.setStatus(REJECTED);
                 response = ResponseEntity.status(HttpStatus.BAD_REQUEST)
                           .headers(responseHeaders)
