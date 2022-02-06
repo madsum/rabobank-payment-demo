@@ -1,40 +1,27 @@
 package com.example.rabobankpaymentdemo.controller;
 
 import com.example.rabobankpaymentdemo.TestData;
-import com.example.rabobankpaymentdemo.handler.CertificateHandler;
-import com.example.rabobankpaymentdemo.handler.IbanHandler;
-import com.example.rabobankpaymentdemo.handler.SignatureHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@ExtendWith(SpringExtension.class)
 class PaymentIInitControllerIT {
-
-    @Mock
-    private IbanHandler ibanHandler;
-
-    @Mock
-    private SignatureHandler signatureHandler;
-
-    @Mock
-    private CertificateHandler certificateHandler;
 
     private MockMvc mockMvc;
 
-    @InjectMocks
+    @Autowired
     private PaymentIInitController paymentIInitController;
 
     @BeforeEach
@@ -45,65 +32,39 @@ class PaymentIInitControllerIT {
     @Test
     void testInitiatePaymentForResponse201() throws Exception {
 
-        when(ibanHandler.verify()).thenReturn(true);
-        when(signatureHandler.verify()).thenReturn(true);
-        when(certificateHandler.verify()).thenReturn(true);
-
         mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Request-Id", "29318e25-cebd-498c-888a-f77672f66450")
+                        .header("X-Request-Id", TestData.uuid)
                         .header("Signature-Certificate", TestData.CERTIFICATE)
                         .header("Signature", TestData.SIGNATURE)
-                        .content("{\n" +
-                                "\"debtorIBAN\": \"NL02RABO7134384551\",\n" +
-                                "\"creditorIBAN\": \"NL94ABNA1008270121\",\n" +
-                                "\"amount\": \"11\",\n" +
-                                "\"currency\": \"EUR\",\n" +
-                                "\"endToEndId\": \"endToEndId\"\n" +
-                                "\n" +
-                                "}"))
+                        .content(TestData.getValidPaymentInitiationRequestJson()))
                         .andExpect(status().isCreated());
     }
 
     @Test
     void testInitiatePaymentWithInvalidDataResponse400() throws Exception {
 
-        when(ibanHandler.verify()).thenReturn(true);
-        when(signatureHandler.verify()).thenReturn(true);
-        when(certificateHandler.verify()).thenReturn(false);
-
         mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Request-Id", "29318e25-cebd-498c-888a-f77672f66449")
+                        .header("X-Request-Id", TestData.uuid)
                         .header("Signature-Certificate", TestData.CERTIFICATE)
                         .header("Signature", TestData.RABO_SIGNATURE)
-                        .content("{\"debtorIBAN\":\"NL02RABO7134384551\",\"creditorIBAN\":\"NL94ABNA1008270121\",\"amount\":\"1.00\"}"))
+                        .content(TestData.getValidPaymentInitiationRequestJson()))
                         .andExpect(status().isBadRequest());
     }
 
     @Test
     void testInitiatePaymentLimitExceedResponse422() throws Exception {
-
-        when(ibanHandler.verify()).thenReturn(false);
-        when(signatureHandler.verify()).thenReturn(true);
-        when(certificateHandler.verify()).thenReturn(true);
-
+        TestData.getInvalidPaymentInitiationRequestJson();
         mockMvc.perform(post(PaymentIInitController.PAYMENT_INITIATE_VERSION + PaymentIInitController.INITIATE_PAYMENT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Request-Id", "29318e25-cebd-498c-888a-f77672f66500")
+                        .header("X-Request-Id", TestData.uuid)
                         .header("Signature-Certificate", TestData.CERTIFICATE)
-                        .header("Signature", TestData.SIGNATURE_201)
-                        .content("{\n" +
-                                "\"debtorIBAN\": \"NL02RABO7134384113\",\n" +
-                                "\"creditorIBAN\": \"NL94ABNA1008270121\",\n" +
-                                "\"amount\": \"500\",\n" +
-                                "\"currency\": \"EUR\",\n" +
-                                "\"endToEndId\": \"endToEndId\"\n" +
-                                "\n" +
-                                "}"))
+                        .header("Signature", TestData.SIGNATURE_422)
+                        .content(TestData.getInvalidPaymentInitiationRequestJson()))
                         .andExpect(status().isUnprocessableEntity());
     }
 
@@ -113,14 +74,7 @@ class PaymentIInitControllerIT {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON)
                             .header("X-Request-Id", "29318e25-cebd-498c-888a-f77672f66500")
-                            .content("{\n" +
-                                    "\"debtorIBAN\": \"NL02RABO7134384113\",\n" +
-                                    "\"creditorIBAN\": \"NL94ABNA1008270121\",\n" +
-                                    "\"amount\": \"500\",\n" +
-                                    "\"currency\": \"EUR\",\n" +
-                                    "\"endToEndId\": \"endToEndId\"\n" +
-                                    "\n" +
-                                    "}"))
+                            .content(TestData.getValidPaymentInitiationRequestJson()))
                             .andExpect(status().isOk())
                             .andReturn();
 

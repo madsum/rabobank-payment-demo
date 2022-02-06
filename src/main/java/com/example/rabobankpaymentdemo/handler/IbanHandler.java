@@ -23,9 +23,9 @@ public class IbanHandler extends TppRequestHandler {
         int sum = 0;
         if(validateIban(iban) == VALID_IBAN){
             char[] chars =   iban.toCharArray();
-            for(int i=0;  i < chars.length; i++ ){
-                if(Character.isDigit(chars[i])){
-                    sum +=  Character.getNumericValue(chars[i]);
+            for (char aChar : chars) {
+                if (Character.isDigit(aChar)) {
+                    sum += Character.getNumericValue(aChar);
                 }
             }
         }
@@ -45,10 +45,7 @@ public class IbanHandler extends TppRequestHandler {
 
     public boolean verify()  {
         double amount = Double.parseDouble(paymentInitiationRequestBody.getAmount());
-        if(  amount > 0 &&  sumOfValidIbanAccountDigit(paymentInitiationRequestBody.getDebtorIBAN()) %
-                paymentInitiationRequestBody.getDebtorIBAN().length() == 0 ){
-            return false;
-        }
-        return true;
+        return !(amount > 0) || sumOfValidIbanAccountDigit(paymentInitiationRequestBody.getDebtorIBAN()) %
+                paymentInitiationRequestBody.getDebtorIBAN().length() != 0;
     }
 }

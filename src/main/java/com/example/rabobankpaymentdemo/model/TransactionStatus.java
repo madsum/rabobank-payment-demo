@@ -4,7 +4,7 @@ public enum TransactionStatus {
     ACCEPTED("Accepted"),
     REJECTED("Rejected");
 
-    private String value;
+    private final String value;
 
     TransactionStatus(String value) {
         this.value = value;

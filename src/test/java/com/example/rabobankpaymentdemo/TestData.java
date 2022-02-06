@@ -1,18 +1,17 @@
 package com.example.rabobankpaymentdemo;
 
-import com.example.rabobankpaymentdemo.exception.InvalidSignatureException;
 import com.example.rabobankpaymentdemo.handler.CertificateHandler;
 import com.example.rabobankpaymentdemo.handler.SignatureHandler;
 import com.example.rabobankpaymentdemo.model.PaymentInitiationRequest;
 import com.example.rabobankpaymentdemo.util.PaymentUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.ByteArrayInputStream;
-import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Optional;
 import java.util.UUID;
 
 public class TestData {
@@ -41,27 +40,24 @@ public class TestData {
             "4zxyHcER\n" +
             "-----END CERTIFICATE-----";
 
-    public static final String INVALID_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n" +
-            "MIIDwjCCAqoCCQDxVbCjIKynQjANBgkqhkiG9w0BAQsFADCBojELMAkGA1UEBhMC\n" +
-            "TkwxEDAOBgNVBAgMB1V0cmVjaHQxEDAOBgNVBAcMB1V0cmVjaHQxETAPBgNVBAoM\n" +
-            "CFJhYm9iYW5rMRMwEQYDVQQLDApBc3Nlc3NtZW50MSIwIAYDVQQDDBlTYW5kYm94\n";
-
-    public static final String SIGNATURE = "WHjIGjM9ONl40W5VPfwu63f47cGFE36ZLfl16tdkDndRF7JYauMDRj5yusfuW7aiExkk+bU3lttDLlb4lYhuX0D6Y0M3cofm0Rmz7o7pQJw4t5uyvkHtnLLATmnv+iZIRVw7XcSgQZ9nmjzpCqo8qn4bm4v6MdxuGwOzz97ipU/NRav6qAF9o1bQzsYysnsEVkDWNfQmCfNTESrY62nitVR6zeGeKtOwuaIVAgHFNDEYaIi77UNnAIZ7ZbKBCGfaFW80vKb+oJzjCjFDUWp2saUmhahxBIBZSMMzVdp6N5+2uAM4boVeYMIqqEAVuPlwOKrt8bXuxRSrAUTdrYuVSg==";
+    public static final String SIGNATURE = "D0YnSFErjHF8+gpuZFxAoB7v15443qKWTaekhMZMMoNiVxTRROh4Hy5F7a7JYGig/n7kGts5D6GakdcIdZuOMbkOPknLahjSWILpbkoqMke1ZAFXHZhJ+T4+SDCP7om3fHLhxhrxIG/J5WiEzYm9ywsAGM6u7nWVhg0IgMLNhcJLIEHQVUQvKYfXPOsXJz10iMWGXF3mBFxRIprvnJgJaXq1dmN8cvqQRYpYyOz5poYNr61R/YPdMxzm/O7T/6nmxegXynAOzXEh4E0/aFxzppaeFGyWCejaW0BxRuTlwofcC76S3m4xrHqawX/FZ4OAtgTARmcTM0FPPEJzgBBOww==";
     public static final String RABO_SIGNATURE = "AlFr/WbYiekHmbB6XdEO/7ghKd0n6q/bapENAYsL86KoYHqa4eP34xfH9icpQRmTpH0qOkt1vfUPWnaqu+vHBWx/gJXiuVlhayxLZD2w41q8ITkoj4oRLn2U1q8cLbjUtjzFWX9TgiQw1iY0ezpFqyDLPU7+ZzO01JI+yspn2gtto0XUm5KuxUPK24+xHD6R1UZSCSJKXY1QsKQfJ+gjzEjrtGvmASx1SUrpmyzVmf4qLwFB1ViRZmDZFtHIuuUVBBb835dCs2W+d7a+icGOCtGQbFcHvW0FODibnY5qq8v5w/P9i9PSarDaGgYb+1pMSnF3p8FsHAjk3Wccg2a1GQ==";
-    public static final String SIGNATURE_201 = "K0Vbganb4N6y3EEgcrZuCS/gK1YHvu6WvpzK799Cfj5Ijl/l3qF9LheYPNSelccGYQ1Hy5/hrjnqGVfc+X2/ft29HHypfL1OUEEeOgGZrGaxB0za9tCNCrF/YWJi/pQHXi8RT5auwpg2vGNH2CVXRJtHkc1kHJL4lx7o48YCwh3ShhLzzMzSLfgSgcaqHaFBdYkfTfQ00qCvmMX9Y//3jn1DSfrkcVZd3/IgATufS2fQPzHwFI+PObWGitVaR6J6n9BW6M57xIg18LR7SKVePQ52VQW/5Eon2yxijvHhJkAbSS8jWWAuQZ7wqN6xcvX2yi52Y72IAsaUavtnQqL7/g==";
+    public static final String SIGNATURE_422 = "Hu044/rzsfD/6VVrB2FHnC+BzIychwRckG24YuxR+2tRUQtrOr7WmuXuAQ8sw8ARmdFhSEme2XxQG9GRbBZ21cZK/Je9cbpWdzVuQNsNR1q5xiJClBot7pcH3PN/P8LhFiqezCr6iVULX30cwHlsrMHUjE4s74mWuy0BL3Th62sS2y5eDEU8q1M1a9s8cWkpaOjsiLqlLiQFKCql9ILhZWbKWs4tYBnJ+9LjIpO1KKEjZgcGMD7DUb0l7KF2I+DUElG++HmBfAymjRIS8Sr2goMBr0JnFQ21wj9P0gp5OlDLJ9riPt9K4oOGZXEWXgBzCB3oSmdLOQNf8m3bEvvJnA==";
 
-    public static  Optional<X509Certificate> getValidX509Certificate(){
-        Optional<X509Certificate> certificate = null;
+    public static final UUID uuid = UUID.fromString("29318e25-cebd-498c-888a-f77672f66449");
+
+    public static  X509Certificate getValidX509Certificate(){
+        X509Certificate certificate = null;
         try {
             CertificateFactory fact = CertificateFactory.getInstance("X.509");
-            ByteArrayInputStream is = new ByteArrayInputStream(CERTIFICATE.getBytes("UTF8"));
-            certificate = Optional.ofNullable((X509Certificate) fact.generateCertificate(is));
+            ByteArrayInputStream is = new ByteArrayInputStream(CERTIFICATE.getBytes(StandardCharsets.UTF_8));
+            certificate = (X509Certificate) fact.generateCertificate(is);
         }catch (Exception ignore){
         }
         return certificate;
     }
 
-    public static CertificateHandler getCertificateHandler() throws InvalidSignatureException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public static CertificateHandler getCertificateHandler() {
         UUID xRequestId = UUID.fromString("29318e25-cebd-498c-888a-f77672f66449");
         PaymentInitiationRequest paymentInitiationRequest = getValidPaymentInitiationRequest();
         String sha256Encoded = DigestUtils.sha256Hex(paymentInitiationRequest.toString());
@@ -70,7 +66,7 @@ public class TestData {
         return new CertificateHandler(xRequestId, CERTIFICATE, paymentInitiationRequest, signature);
     }
 
-    public static SignatureHandler geeSignatureHandler() throws InvalidSignatureException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public static SignatureHandler geeSignatureHandler(){
         UUID xRequestId = UUID.fromString("29318e25-cebd-498c-888a-f77672f66449");
         PaymentInitiationRequest paymentInitiationRequest = getValidPaymentInitiationRequest();
         String sha256Encoded = DigestUtils.sha256Hex(paymentInitiationRequest.toString());
@@ -78,8 +74,6 @@ public class TestData {
         String signature = PaymentUtil.generateSignature(sha256Encoded);
         return new SignatureHandler(xRequestId, CERTIFICATE, paymentInitiationRequest, signature);
     }
-
-
 
     public static PaymentInitiationRequest getValidPaymentInitiationRequest(){
         PaymentInitiationRequest paymentInitiationRequest = new PaymentInitiationRequest();
@@ -90,12 +84,22 @@ public class TestData {
         return paymentInitiationRequest;
     }
 
+    public static String getValidPaymentInitiationRequestJson() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(getValidPaymentInitiationRequest());
+    }
+
     public static PaymentInitiationRequest getInvalidPaymentInitiationRequest(){
         PaymentInitiationRequest paymentInitiationRequest = new PaymentInitiationRequest();
         paymentInitiationRequest.setCreditorIBAN("NL94ABNA1008270121");
         paymentInitiationRequest.setDebtorIBAN("NL02RABO7134384113");
-        paymentInitiationRequest.setAmount("100");
+        paymentInitiationRequest.setAmount("500");
         paymentInitiationRequest.setCurrency("EUR");
         return paymentInitiationRequest;
+    }
+
+    public static String getInvalidPaymentInitiationRequestJson() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(getInvalidPaymentInitiationRequest());
     }
 }

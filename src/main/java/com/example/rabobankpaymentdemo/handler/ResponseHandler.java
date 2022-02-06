@@ -19,7 +19,7 @@ public class ResponseHandler {
         PaymentAcceptedResponse paymentAcceptedResponse = new PaymentAcceptedResponse();
         paymentAcceptedResponse.setPaymentId(UUID.randomUUID());
         paymentAcceptedResponse.setStatus(ACCEPTED);
-        ResponseEntity<PaymentAcceptedResponse> response;
+        ResponseEntity<PaymentAcceptedResponse> response = null;
 
         switch (errorReasonCode){
             case UNKNOWN_CERTIFICATE:
@@ -46,12 +46,22 @@ public class ResponseHandler {
                         .body(paymentAcceptedResponse);
                 break;
 
-            default:
+            case  PAYMENT_ACCEPT:
                 responseHeaders.set("HttpHeaders.ACCEPT", HttpHeaders.ACCEPT);
                 paymentAcceptedResponse.setStatus(ACCEPTED);
                 response = ResponseEntity.status(HttpStatus.CREATED)
                         .headers(responseHeaders)
                         .body(paymentAcceptedResponse);
+                break;
+
+            case  GENERAL_ERROR:
+                responseHeaders.set("GENERAL_ERROR", HttpStatus.INTERNAL_SERVER_ERROR.name());
+                paymentAcceptedResponse.setStatus(REJECTED);
+                response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .headers(responseHeaders)
+                        .body(paymentAcceptedResponse);
+            default:
+
         }
         return response;
     }

@@ -5,13 +5,13 @@ import lombok.Data;
 @Data
 public class PaymentInitiationRequest {
 
-  private String debtorIBAN = null;
+  private String debtorIBAN;
 
-  private String creditorIBAN = null;
+  private String creditorIBAN;
 
-  private String amount = null;
+  private String amount;
 
   private String currency = "EUR";
 
-  private String endToEndId = null;
+  private String endToEndId;
 }

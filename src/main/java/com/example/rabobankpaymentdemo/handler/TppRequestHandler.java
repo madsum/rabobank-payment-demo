@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -31,7 +32,7 @@ public abstract class TppRequestHandler {
 
     protected String generatedSignature;
 
-    protected Optional<X509Certificate> x509Certificate = Optional.empty();
+    protected X509Certificate x509Certificate;
 
     protected String certificateString;
 
@@ -56,8 +57,7 @@ public abstract class TppRequestHandler {
             "EQGaOU8RJ3Rry0HWo9M/JmYFrdBPP/3sWAt/+O4th5Jyk8RajN3fHFCAoUz4rXxh\n" +
             "UZkf/9u3Q038rRBvqaA+6c0uW58XqF/QyUxuTD4er9veCniUhwIX4XBsDNxIW/rw\n" +
             "BRAxOUkG4V+XqrBb75lCyea1o/9HIaq1iIKI4Day0piMOgwPEg1wF383yd0x8hRW\n" +
-            "4zxyHcER\n" +
-            "-----END CERTIFICATE-----";
+            "4zxyHcER\n" + "-----END CERTIFICATE-----";
 
 
     public TppRequestHandler(UUID xRequestId, String certificateString, String signature, PaymentInitiationRequest paymentInitiationRequestBody) {
@@ -81,22 +81,28 @@ public abstract class TppRequestHandler {
     }
 
     protected Optional<X509Certificate> getX509CertificateFromCertificate(String certificateString) {
-        if( x509Certificate.isEmpty()){
-            ByteArrayInputStream byteArrayInputStream = null;
+        if( x509Certificate == null){
+            ByteArrayInputStream byteArrayInputStream;
             try {
                 CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-                byteArrayInputStream = new ByteArrayInputStream(certificateString.getBytes("UTF8"));
-                x509Certificate = Optional.ofNullable((X509Certificate) certificateFactory.generateCertificate(byteArrayInputStream));
+                byteArrayInputStream = new ByteArrayInputStream(certificateString.getBytes(StandardCharsets.UTF_8));
+                x509Certificate = (X509Certificate) certificateFactory.generateCertificate(byteArrayInputStream);
             }catch (Exception e){
                 log.error("Exception for signature: {}", e.getMessage());
             }
         }
-        return x509Certificate;
+        return Optional.ofNullable(x509Certificate);
     }
 
     public String digest(String originalString){
-        String sha256hex = DigestUtils.sha256Hex(originalString);
-        return sha256hex;
+        return DigestUtils.sha256Hex(originalString);
+    }
+
+    public void init(UUID xRequestId, String certificateString, String signature, PaymentInitiationRequest paymentInitiationRequestBody){
+        this.xRequestId = xRequestId;
+        this.certificateString = certificateString;
+        this.paymentInitiationRequestBody = paymentInitiationRequestBody;
+        this.signature = signature;
     }
 
     public abstract boolean verify();

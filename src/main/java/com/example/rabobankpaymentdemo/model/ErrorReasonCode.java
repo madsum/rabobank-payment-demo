@@ -6,9 +6,10 @@ public enum ErrorReasonCode {
   INVALID_REQUEST("INVALID_REQUEST"),
   LIMIT_EXCEEDED("LIMIT_EXCEEDED"),
   GENERAL_ERROR("GENERAL_ERROR"),
-  VALID_IBAN("VALID_IBAN");
+  VALID_IBAN("VALID_IBAN"),
+  PAYMENT_ACCEPT("PAYMENT_ACCEPT");
 
-  private String value;
+  private final String value;
 
   ErrorReasonCode(String value) {
     this.value = value;

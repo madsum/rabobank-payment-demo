@@ -6,10 +6,6 @@ import java.util.UUID;
 
 @Data
 public class PaymentAcceptedResponse {
-
-  private UUID paymentId = null;
-
-  private TransactionStatus status = null;
-
-
+  private UUID paymentId;
+  private TransactionStatus status;
 }

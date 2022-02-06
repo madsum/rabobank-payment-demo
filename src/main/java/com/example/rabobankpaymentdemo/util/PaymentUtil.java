@@ -12,7 +12,7 @@ import java.util.Base64;
 @Slf4j
 public class PaymentUtil {
 
-    private static String PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n" +
+    private static final String PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n" +
             "MIIEowIBAAKCAQEAryLyouTQr1dvMT4qvek0eZsh8g0DQQLlOgBzZwx7iInxYEAg\n" +
             "MNxCKXiZCbmWHBYqh6lpPh+BBmrnBQzB+qrSNIyd4bFhfUlQ+htK08yyL9g4nyLt\n" +
             "0LeKuxoaVWpInrB5FRzoEY5PPpcEXSObgr+pM71AvyJtQLxZbqTao4S7TRKecUm3\n" +
@@ -52,7 +52,7 @@ public class PaymentUtil {
                     .replaceAll("\n", "");
             PKCS8EncodedKeySpec keySpecPrivate = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(stripPrivateKey));
 
-            KeyFactory keyFactory = null;
+            KeyFactory keyFactory;
             try {
                 keyFactory = KeyFactory.getInstance("RSA");
                 privateKey = keyFactory.generatePrivate(keySpecPrivate);
